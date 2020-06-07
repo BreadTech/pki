@@ -5,9 +5,14 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"io"
+	"os"
 )
 
-func PrintPrivateKeyPEM(writer io.Writer, alg string, key crypto.PrivateKey) error {
+func PrintPrivateKeyPEM(alg string, key crypto.PrivateKey) error {
+	return WritePrivateKeyPEM(os.Stdout, alg, key)
+}
+
+func WritePrivateKeyPEM(writer io.Writer, alg string, key crypto.PrivateKey) error {
 	keyBytes, err := x509.MarshalPKCS8PrivateKey(key)
 	if err != nil {
 		return err

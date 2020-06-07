@@ -4,7 +4,6 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"os"
 
 	"github.com/spf13/cobra"
 
@@ -32,7 +31,7 @@ var (
 				panic(err)
 			}
 
-			if err = pkg.PrintPrivateKeyPEM(os.Stdout, keyType, privKey); err != nil {
+			if err = pkg.PrintPrivateKeyPEM(keyType, privKey); err != nil {
 				panic(err)
 			}
 
