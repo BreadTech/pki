@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -15,7 +16,8 @@ const (
 )
 
 var (
-	curves = map[string]elliptic.Curve{
+	curveStr string
+	curves   = map[string]elliptic.Curve{
 		"p224": elliptic.P224(),
 		"p256": elliptic.P256(),
 		"p384": elliptic.P384(),
@@ -26,7 +28,12 @@ var (
 		Use:   keyType,
 		Short: "Generates an ellptic-curve key",
 		Run: func(cmd *cobra.Command, args []string) {
-			privKey, err := ecdsa.GenerateKey(curves["p224"], rand.Reader)
+			curve, ok := curves[strings.ToLower(curveStr)]
+			if !ok {
+				panic("curve must be one of [p224, p256, p384, p521]")
+			}
+
+			privKey, err := ecdsa.GenerateKey(curve, rand.Reader)
 			if err != nil {
 				panic(err)
 			}
@@ -34,7 +41,10 @@ var (
 			if err = pkg.PrintPrivateKeyPEM(keyType, privKey); err != nil {
 				panic(err)
 			}
-
 		},
 	}
 )
+
+func init() {
+	Cmd.Flags().StringVarP(&curveStr, "curve", "c", "p224", "Specifies the curve to use")
+}
