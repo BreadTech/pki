@@ -48,12 +48,12 @@ func WritePrivateKeyPEM(writer io.Writer, alg, cipher string, key crypto.Private
 			Bytes:   keyBytes,
 		}
 	} else {
-		pwBytes, err := ReadSecureInput("Enter Password: ")
+		pwBytes, err := ReadSecureInput("Enter password: ")
 		if err != nil {
 			return err
 		}
 
-		pwBytes2, err := ReadSecureInput("Confirm Password: ")
+		pwBytes2, err := ReadSecureInput("Confirm password: ")
 		if err != nil {
 			return err
 		}
@@ -97,12 +97,12 @@ func WritePublicKeyPEM(writer io.Writer, alg string, key crypto.PublicKey) error
 
 // ReadSecureInput reads input from stdin without echo.
 func ReadSecureInput(prompt string) ([]byte, error) {
-	fmt.Print(prompt)
+	fmt.Fprint(os.Stderr, prompt)
 	pwBytes, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println()
+	fmt.Fprintln(os.Stderr)
 	return pwBytes, nil
 }
 
