@@ -25,7 +25,7 @@ var (
 				panic(err)
 			}
 
-			if err = pkg.PrintPrivateKeyPEM(keyType, privKey); err != nil {
+			if err = pkg.PrintPrivateKeyPEM(keyType, cmd.Flag("cipher").Value.String(), privKey); err != nil {
 				panic(err)
 			}
 		},

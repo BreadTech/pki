@@ -17,6 +17,8 @@ var (
 )
 
 func init() {
+	Cmd.PersistentFlags().String("cipher", "aes128", "Specifies cipher to use for encrypting the private key")
+
 	Cmd.AddCommand(ecc.Cmd)
 	Cmd.AddCommand(edc.Cmd)
 	Cmd.AddCommand(rsa.Cmd)
