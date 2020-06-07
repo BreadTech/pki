@@ -20,6 +20,24 @@ var (
 		Use:   keyType,
 		Short: "Generates an RSA key",
 		Run: func(cmd *cobra.Command, args []string) {
+			// Print public key for given private key
+			if keyFile := cmd.Flag("public").Value.String(); keyFile != "" {
+				privKey, err := pkg.ReadPrivateKeyFile(keyFile)
+				if err != nil {
+					panic(err)
+				}
+				rsaKey, ok := privKey.(*rsa.PrivateKey)
+				if !ok {
+					panic("Not an RSA private key")
+				}
+				if err = pkg.PrintPublicKeyPEM(keyType, rsaKey.Public()); err != nil {
+					panic(err)
+				}
+
+				return
+			}
+
+			// Generate private key
 			privKey, err := rsa.GenerateKey(rand.Reader, bitSize)
 			if err != nil {
 				panic(err)

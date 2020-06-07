@@ -28,6 +28,24 @@ var (
 		Use:   keyType,
 		Short: "Generates an ellptic-curve key",
 		Run: func(cmd *cobra.Command, args []string) {
+			// Print public key for given private key
+			if keyFile := cmd.Flag("public").Value.String(); keyFile != "" {
+				privKey, err := pkg.ReadPrivateKeyFile(keyFile)
+				if err != nil {
+					panic(err)
+				}
+				eccKey, ok := privKey.(*ecdsa.PrivateKey)
+				if !ok {
+					panic("Not an elliptic-curve private key")
+				}
+				if err = pkg.PrintPublicKeyPEM(keyType, eccKey.Public()); err != nil {
+					panic(err)
+				}
+
+				return
+			}
+
+			// Generate private key
 			curve, ok := curves[strings.ToLower(curveStr)]
 			if !ok {
 				panic("curve must be one of [p224, p256, p384, p521]")

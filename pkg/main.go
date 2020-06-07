@@ -8,10 +8,12 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"strings"
 	"syscall"
 
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -75,6 +77,24 @@ func WritePrivateKeyPEM(writer io.Writer, alg, cipher string, key crypto.Private
 	return pem.Encode(writer, block)
 }
 
+// PrintPublicKeyPEM encodes the given public key and writes to stdout.
+func PrintPublicKeyPEM(alg string, key crypto.PublicKey) error {
+	return WritePublicKeyPEM(os.Stdout, alg, key)
+}
+
+// WritePublicKeyPEM encodes the given public key and writes to given writer.
+func WritePublicKeyPEM(writer io.Writer, alg string, key crypto.PublicKey) error {
+	keyBytes, err := x509.MarshalPKIXPublicKey(key)
+	if err != nil {
+		return err
+	}
+	return pem.Encode(writer, &pem.Block{
+		Type:    "PUBLIC KEY",
+		Headers: map[string]string{"alg": alg},
+		Bytes:   keyBytes,
+	})
+}
+
 // ReadSecureInput reads input from stdin without echo.
 func ReadSecureInput(prompt string) ([]byte, error) {
 	fmt.Print(prompt)
@@ -84,4 +104,27 @@ func ReadSecureInput(prompt string) ([]byte, error) {
 	}
 	fmt.Println()
 	return pwBytes, nil
+}
+
+// ReadPrivateKeyFile opens a file and parses the PEM bytes as PKCS8
+func ReadPrivateKeyFile(fname string) (interface{}, error) {
+	keyBytes, err := ioutil.ReadFile(fname)
+	if err != nil {
+		return nil, err
+	}
+	block, rest := pem.Decode(keyBytes)
+	if len(rest) > 0 {
+		logrus.WithField("rest", rest).Warn("pki/pkg.ReadKeyFile: extra data found in PEM")
+	}
+	// Prompt user for pw if encrypted.
+	if strings.Contains(block.Type, "ENCRYPTED") {
+		pw, err := ReadSecureInput("Enter password: ")
+		if err != nil {
+			return nil, err
+		}
+		if block.Bytes, err = x509.DecryptPEMBlock(block, pw); err != nil {
+			return nil, err
+		}
+	}
+	return x509.ParsePKCS8PrivateKey(block.Bytes)
 }
