@@ -1,4 +1,4 @@
-package ecc
+package ec
 
 import (
 	"crypto/ecdsa"
@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	keyType = "ecc"
+	keyType = "ec"
 )
 
 var (
