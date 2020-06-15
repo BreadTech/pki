@@ -20,8 +20,9 @@ func ReadFile(fileName string) ([]byte, error) {
 		reader = os.Stdin
 	}
 	dat := []byte{}
-	if _, err := bytes.NewBuffer(dat).ReadFrom(reader); err != nil {
+	buf := bytes.NewBuffer(dat)
+	if _, err := buf.ReadFrom(reader); err != nil {
 		return nil, err
 	}
-	return dat, nil
+	return buf.Bytes(), nil
 }

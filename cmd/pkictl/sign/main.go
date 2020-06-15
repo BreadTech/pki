@@ -8,7 +8,7 @@ import (
 
 var (
 	Cmd = &cobra.Command{
-		Aliases: []string{"sig"},
+		Aliases: []string{"sig", "s"},
 		Use:     "sign",
 		Short:   "Sign data using a private key",
 	}

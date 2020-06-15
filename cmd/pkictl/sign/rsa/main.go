@@ -16,7 +16,7 @@ const (
 
 var (
 	hashType string
-	fileName string
+	datFile  string
 	keyFile  string
 
 	Cmd = &cobra.Command{
@@ -30,7 +30,7 @@ var (
 			}
 
 			// Read data to hash
-			dat, err := pkg.ReadFile(fileName)
+			dat, err := pkg.ReadFile(datFile)
 			if err != nil {
 				panic(err)
 			}
@@ -49,7 +49,7 @@ var (
 
 func init() {
 	Cmd.Flags().StringVar(&hashType, "hash", "sha256", "Specifies the hash algorithm to use on the data")
-	Cmd.Flags().StringVarP(&fileName, "file", "f", "", "Specifies the file to sign")
+	Cmd.Flags().StringVarP(&datFile, "file", "f", "", "Specifies the file to sign")
 	Cmd.Flags().StringVarP(&keyFile, "key", "k", "", "Specifies the private key for signing")
 	Cmd.MarkFlagRequired("key")
 }

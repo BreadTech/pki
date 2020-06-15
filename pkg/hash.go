@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"crypto"
+	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/sha512"
 	"hash"
@@ -42,5 +43,14 @@ func Hash(hashType string, dat []byte) (crypto.Hash, []byte) {
 	if !ok {
 		panic("Invalid hash type")
 	}
-	return hashEnum, hashFuncs[hashEnum]().Sum(dat)
+	hasher := hashFuncs[hashEnum]()
+	hasher.Write(dat)
+	return hashEnum, hasher.Sum(nil)
+}
+
+func PSSOption(hashType string) *rsa.PSSOptions {
+	return &rsa.PSSOptions{
+		SaltLength: 8,
+		Hash:       hashes[hashType],
+	}
 }
