@@ -16,6 +16,17 @@ cd pki
 go build ./cmd/pkictl
 ```
 
+### Hashing data
+```
+./pkictl hash sha256 > signature.raw
+```
+will run SHA256 hash on data read from stdin (ctrl+D to quit) and write to file named signature.raw
+
+```
+./pkictl hash sha256 -f README.md -ohex
+```
+will hash the README.md file and write to stdout in hexadecimal
+
 ### Generating a key
 
 #### [RSA](https://en.wikipedia.org/wiki/RSA_%28cryptosystem%29)
@@ -26,7 +37,7 @@ will generate a 2048-bit RSA private key (TODO: parameterize bit size)
 
 #### [Elliptic-Curve](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography)
 ```
-./pkictl generate ecc
+./pkictl generate ec
 ```
 will generate an elliptic-curve cryptography private key using the P224 curve (TODO: parameterize curve)
 
