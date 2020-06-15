@@ -43,9 +43,8 @@ func WritePrivateKeyPEM(writer io.Writer, alg, cipher string, key crypto.Private
 	var block *pem.Block
 	if cipher = strings.ToLower(cipher); cipher == "none" {
 		block = &pem.Block{
-			Type:    "PRIVATE KEY",
-			Headers: map[string]string{"alg": alg},
-			Bytes:   keyBytes,
+			Type:  "PRIVATE KEY",
+			Bytes: keyBytes,
 		}
 	} else {
 		pwBytes, err := ReadSecureInput("Enter password: ")
@@ -68,9 +67,9 @@ func WritePrivateKeyPEM(writer io.Writer, alg, cipher string, key crypto.Private
 		}
 
 		if block, err = x509.EncryptPEMBlock(
-			rand.Reader, "ENCRYPTED PRIVATE KEY",
+			rand.Reader, fmt.Sprintf("%s PRIVATE KEY", strings.ToUpper(alg)),
 			keyBytes, pwBytes, cipher); err != nil {
-			return err
+			return fmt.Errorf("Failed to encrypt key: %v", err)
 		}
 	}
 
@@ -89,9 +88,8 @@ func WritePublicKeyPEM(writer io.Writer, alg string, key crypto.PublicKey) error
 		return err
 	}
 	return pem.Encode(writer, &pem.Block{
-		Type:    "PUBLIC KEY",
-		Headers: map[string]string{"alg": alg},
-		Bytes:   keyBytes,
+		Type:  "PUBLIC KEY",
+		Bytes: keyBytes,
 	})
 }
 
@@ -117,7 +115,7 @@ func ReadPrivateKeyFile(fname string) (interface{}, error) {
 		logrus.WithField("rest", rest).Warn("pki/pkg.ReadKeyFile: extra data found in PEM")
 	}
 	// Prompt user for pw if encrypted.
-	if strings.Contains(block.Type, "ENCRYPTED") {
+	if block.Headers["DEK-Info"] != "" {
 		pw, err := ReadSecureInput("Enter password: ")
 		if err != nil {
 			return nil, err
