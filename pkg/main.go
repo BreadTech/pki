@@ -126,3 +126,16 @@ func ReadPrivateKeyFile(fname string) (interface{}, error) {
 	}
 	return x509.ParsePKCS8PrivateKey(block.Bytes)
 }
+
+// ReadPublicKeyFile opens a file and parses the PEM bytes as PKIX
+func ReadPublicKeyFile(fname string) (interface{}, error) {
+	keyBytes, err := ioutil.ReadFile(fname)
+	if err != nil {
+		return nil, err
+	}
+	block, rest := pem.Decode(keyBytes)
+	if len(rest) > 0 {
+		logrus.WithField("rest", rest).Warn("pki/pkg.ReadKeyFile: extra data found in PEM")
+	}
+	return x509.ParsePKIXPublicKey(block.Bytes)
+}

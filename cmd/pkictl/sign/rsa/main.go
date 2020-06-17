@@ -42,7 +42,7 @@ var (
 				hashEnum, hashed); err != nil {
 				panic(err)
 			}
-			fmt.Println(string(dat))
+			fmt.Print(string(dat))
 		},
 	}
 )

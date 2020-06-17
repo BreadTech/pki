@@ -7,6 +7,7 @@ import (
 	"github.com/BreadTech/pki/cmd/pkictl/generate"
 	"github.com/BreadTech/pki/cmd/pkictl/hash"
 	"github.com/BreadTech/pki/cmd/pkictl/sign"
+	"github.com/BreadTech/pki/cmd/pkictl/verify"
 )
 
 func main() {
@@ -18,6 +19,7 @@ func main() {
 	cmd.AddCommand(generate.Cmd)
 	cmd.AddCommand(hash.Cmd)
 	cmd.AddCommand(sign.Cmd)
+	cmd.AddCommand(verify.Cmd)
 	if err := cmd.Execute(); err != nil {
 		logrus.WithError(err).Fatal("labelctl: error occurred")
 	}
