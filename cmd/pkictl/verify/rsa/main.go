@@ -2,6 +2,7 @@ package rsa
 
 import (
 	"crypto/rsa"
+	"encoding/pem"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -33,6 +34,11 @@ var (
 			sig, err := pkg.ReadFile(sigFile)
 			if err != nil {
 				panic(err)
+			}
+
+			// Decode sig as pem if valid
+			if pemBlock, _ := pem.Decode(sig); pemBlock != nil {
+				sig = pemBlock.Bytes
 			}
 
 			// Read data to verify against.

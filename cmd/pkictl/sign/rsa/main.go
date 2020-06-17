@@ -3,7 +3,9 @@ package rsa
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"encoding/pem"
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -18,6 +20,7 @@ var (
 	hashType string
 	datFile  string
 	keyFile  string
+	outForm  string
 
 	Cmd = &cobra.Command{
 		Use:   keyType,
@@ -42,7 +45,16 @@ var (
 				hashEnum, hashed); err != nil {
 				panic(err)
 			}
-			fmt.Print(string(dat))
+
+			switch outForm {
+			case "raw":
+				fmt.Print(string(dat))
+			case "pem":
+				pem.Encode(os.Stdout, &pem.Block{
+					Type:  "RSA SIGNATURE",
+					Bytes: dat,
+				})
+			}
 		},
 	}
 )
@@ -51,5 +63,6 @@ func init() {
 	Cmd.Flags().StringVar(&hashType, "hash", "sha256", "Specifies the hash algorithm to use on the data")
 	Cmd.Flags().StringVarP(&datFile, "file", "f", "", "Specifies the file to sign")
 	Cmd.Flags().StringVarP(&keyFile, "key", "k", "", "Specifies the private key for signing")
+	Cmd.Flags().StringVarP(&outForm, "out", "o", "raw", "Specifies the output format of the signature")
 	Cmd.MarkFlagRequired("key")
 }
