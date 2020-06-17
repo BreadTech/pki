@@ -3,6 +3,7 @@ package verify
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/BreadTech/pki/cmd/pkictl/verify/ec"
 	"github.com/BreadTech/pki/cmd/pkictl/verify/rsa"
 )
 
@@ -16,4 +17,5 @@ var (
 
 func init() {
 	Cmd.AddCommand(rsa.Cmd)
+	Cmd.AddCommand(ec.Cmd)
 }

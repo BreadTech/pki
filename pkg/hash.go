@@ -3,6 +3,7 @@ package pkg
 import (
 	"crypto"
 	"crypto/rsa"
+	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
 	"hash"
@@ -10,12 +11,14 @@ import (
 
 var (
 	hashes = map[string]crypto.Hash{
+		"sha1":   crypto.SHA1, // please don't use
 		"sha224": crypto.SHA224,
 		"sha256": crypto.SHA256,
 		"sha384": crypto.SHA384,
 		"sha512": crypto.SHA512,
 	}
 	hashFuncs = map[crypto.Hash]func() hash.Hash{
+		crypto.SHA1:   sha1.New,
 		crypto.SHA224: sha256.New224,
 		crypto.SHA256: sha256.New,
 		crypto.SHA384: sha512.New384,
