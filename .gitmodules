@@ -1,0 +1,6 @@
+[submodule "interface"]
+	path = interface
+	url = https://github.com/breadtech/interface
+[submodule "pkg/bi"]
+	path = pkg/bi
+	url = https://github.com/breadtech/interface
