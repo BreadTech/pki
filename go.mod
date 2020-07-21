@@ -2,10 +2,10 @@ module github.com/BreadTech/pki
 
 go 1.13
 
-replace breadtech/interface => ./pkg/bi/go
+replace breadinterface => ./pkg/bi/go
 
 require (
-	breadtech/interface v0.0.1
+	breadinterface v0.0.1
 	github.com/gofrs/uuid v3.3.0+incompatible // indirect
 	github.com/golang-migrate/migrate/v4 v4.11.0
 	github.com/jinzhu/gorm v1.9.15
