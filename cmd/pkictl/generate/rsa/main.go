@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/BreadTech/pki/pkg"
+	"github.com/breadtech/pki/pkg"
 )
 
 const (

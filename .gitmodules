@@ -1,3 +1,0 @@
-[submodule "pkg/bi"]
-	path = pkg/breadinterface
-	url = https://github.com/breadtech/interface
