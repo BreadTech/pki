@@ -15,6 +15,6 @@ func main() {
 	}
 	cmd.AddCommand(generate.Cmd)
 	if err := cmd.Execute(); err != nil {
-		logrus.WithError(err).Fatal("labelctl: error occurred")
+		logrus.WithError(err).Fatal("pkictl: error occurred")
 	}
 }
